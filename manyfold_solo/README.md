@@ -9,6 +9,7 @@ This add-on wraps `ghcr.io/manyfold3d/manyfold-solo` for Home Assistant OS with 
 - Uses configurable library and import paths on Home Assistant host storage.
 - Refuses startup if configured paths resolve outside `/share`, `/media`, or `/config`.
 - No external PostgreSQL or Redis required.
+- Supports `amd64` and `aarch64`.
 
 ## Default paths
 
@@ -19,7 +20,7 @@ This add-on wraps `ghcr.io/manyfold3d/manyfold-solo` for Home Assistant OS with 
 ## Installation
 
 1. In Home Assistant OS Add-on Store, open menu (`...`) -> `Repositories`.
-2. Add the Git repository URL that contains `manyfold_solo/` (not a local filesystem path).
+2. Add the Git repository URL for this add-on repository root (the repo includes `repository.yaml` and `manyfold_solo/`).
 3. Refresh Add-on Store and install **Manyfold**.
 4. Configure options (defaults are safe for first run):
    - `library_path`: `/share/manyfold/models`
