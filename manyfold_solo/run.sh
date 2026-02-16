@@ -76,6 +76,18 @@ generate_secret() {
 }
 
 start_manyfold() {
+  if [[ -x /usr/src/app/bin/docker-entrypoint.sh ]]; then
+    log "Starting Manyfold via /usr/src/app/bin/docker-entrypoint.sh foreman start"
+    cd /usr/src/app
+    exec ./bin/docker-entrypoint.sh foreman start
+  fi
+
+  if [[ -x /app/bin/docker-entrypoint.sh ]]; then
+    log "Starting Manyfold via /app/bin/docker-entrypoint.sh foreman start"
+    cd /app
+    exec ./bin/docker-entrypoint.sh foreman start
+  fi
+
   local candidate
   for candidate in \
     /usr/local/bin/docker-entrypoint.sh \
@@ -85,16 +97,21 @@ start_manyfold() {
   do
     if [[ -x "$candidate" ]]; then
       log "Starting Manyfold via ${candidate}"
+      if [[ "$candidate" == *docker-entrypoint* ]]; then
+        exec "$candidate" foreman start
+      fi
       exec "$candidate"
     fi
   done
 
   if command -v docker-entrypoint >/dev/null 2>&1; then
     log "Starting Manyfold via docker-entrypoint"
-    exec docker-entrypoint
+    exec docker-entrypoint foreman start
   fi
 
-  if [[ -d /app ]]; then
+  if [[ -d /usr/src/app ]]; then
+    cd /usr/src/app
+  elif [[ -d /app ]]; then
     cd /app
   fi
 
