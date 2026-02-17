@@ -17,6 +17,11 @@ ports_description:
   3214/tcp: "Manyfold Web UI"
 
 webui: "http://[HOST]:[PORT:3214]"
+ingress: true
+ingress_port: 3214
+panel_title: "Manyfold"
+panel_icon: "mdi:cube-outline"
+panel_admin: true
 
 map:
   - addon_config:rw
