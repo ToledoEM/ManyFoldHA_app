@@ -125,8 +125,8 @@ start_manyfold() {
 
 [[ -f "$OPTIONS_JSON" ]] || die "Missing options file at ${OPTIONS_JSON}"
 
-PUID="$(read_opt puid)"; PUID="${PUID:-0}"
-PGID="$(read_opt pgid)"; PGID="${PGID:-0}"
+PUID="$(read_opt puid)"; PUID="${PUID:-1000}"
+PGID="$(read_opt pgid)"; PGID="${PGID:-1000}"
 MULTIUSER="$(read_opt multiuser)"; MULTIUSER="${MULTIUSER:-true}"
 LIBRARY_PATH_RAW="$(read_opt library_path)"; LIBRARY_PATH_RAW="${LIBRARY_PATH_RAW:-$DEFAULT_LIBRARY_PATH}"
 IMPORT_PATH_RAW="$(read_opt import_path)"; IMPORT_PATH_RAW="${IMPORT_PATH_RAW:-$DEFAULT_IMPORT_PATH}"

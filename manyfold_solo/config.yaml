@@ -30,8 +30,8 @@ map:
 
 options:
   secret_key_base: ""
-  puid: 0
-  pgid: 0
+  puid: 1000
+  pgid: 1000
   multiuser: true
   library_path: "/share/manyfold/models"
   import_path: "/share/manyfold/import"

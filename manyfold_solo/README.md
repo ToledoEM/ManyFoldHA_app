@@ -28,6 +28,7 @@ Documentation: https://manyfold.app/get-started/
    - `library_path`: `/share/manyfold/models`
    - `import_path`: `/share/manyfold/import`
    - `secret_key_base`: leave blank to auto-generate
+   - `puid` / `pgid`: set to a non-root UID/GID (see "Fix root warning (PUID/PGID)" below)
 5. Start the add-on.
 6. Open `http://<HA_IP>:3214`.
 
@@ -53,6 +54,47 @@ Local development alternative on the HA host:
 - `import_path`: Staging/drop path.
 - `thumbnails_path`: Persistent thumbnails/index artifacts (must be under `/config`).
 - `log_level`: `info`, `debug`, `warn`, `error`.
+
+## Fix root warning (PUID/PGID)
+
+If Manyfold shows:
+
+`Manyfold is running as root, which is a security risk.`
+
+set `puid` and `pgid` in the add-on Configuration tab to a non-root UID/GID.
+
+Example:
+
+```yaml
+puid: 1000
+pgid: 1000
+```
+
+How to find the correct values in Home Assistant:
+
+1. Open the **Terminal & SSH** add-on (or SSH into the HA host).
+2. If you know the target Linux user name, run:
+
+```bash
+id <username>
+```
+
+Use the `uid=` value for `puid` and `gid=` value for `pgid`.
+
+If you do not have a specific username, use the owner of the Manyfold folders:
+
+```bash
+stat -c '%u %g' /share/manyfold/models
+stat -c '%u %g' /share/manyfold/import
+```
+
+Set `puid`/`pgid` to those numbers.
+
+After changing values:
+
+1. Save add-on Configuration.
+2. Restart the Manyfold add-on.
+3. Check logs for `puid:pgid=<uid>:<gid>` and confirm the warning is gone.
 
 ## Validation behavior
 
