@@ -52,3 +52,7 @@ temp/
 
 # Local Docker overrides
 docker-compose.override.yml
+
+# dev
+AGENT.md
+dev_readme.md
