@@ -66,6 +66,12 @@ ensure_dir() {
   mkdir -p "$dir"
 }
 
+chown_recursive() {
+  local owner="$1"
+  local path="$2"
+  chown -R "$owner" "$path"
+}
+
 generate_secret() {
   if command -v openssl >/dev/null 2>&1; then
     openssl rand -hex 64
@@ -147,6 +153,7 @@ case "$THUMBNAILS_PATH" in
 esac
 
 ensure_dir "$CONFIG_DIR"
+ensure_dir "$DEFAULT_THUMBNAILS_PATH"
 ensure_dir "$LIBRARY_PATH"
 ensure_dir "$IMPORT_PATH"
 ensure_dir "$THUMBNAILS_PATH"
@@ -178,8 +185,11 @@ export MANYFOLD_THUMBNAILS_PATH="$THUMBNAILS_PATH"
 export RAILS_LOG_LEVEL="$LOG_LEVEL"
 export PORT="3214"
 
-chown "$PUID:$PGID" "$CONFIG_DIR" "$LIBRARY_PATH" "$IMPORT_PATH" "$THUMBNAILS_PATH" 2>/dev/null || \
-  log "Skipping chown (insufficient permissions or unchanged ownership)"
+chown_recursive "$PUID:$PGID" "$CONFIG_DIR"
+chown_recursive "$PUID:$PGID" "$DEFAULT_THUMBNAILS_PATH"
+chown_recursive "$PUID:$PGID" "$LIBRARY_PATH"
+chown_recursive "$PUID:$PGID" "$IMPORT_PATH"
+chown_recursive "$PUID:$PGID" "$THUMBNAILS_PATH"
 
 log "Configuration summary:"
 log "  library_path=${LIBRARY_PATH}"
