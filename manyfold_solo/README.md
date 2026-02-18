@@ -8,7 +8,7 @@ Documentation: https://manyfold.app/get-started/
 
 - Runs Manyfold on port `3214`.
 - Persists app data, database, cache, and settings under `/config` (`addon_config`).
-- Uses configurable library and import paths on Home Assistant host storage.
+- Uses a configurable library path on Home Assistant host storage.
 - Refuses startup if configured paths resolve outside `/share`, `/media`, or `/config`.
 - No external PostgreSQL or Redis required.
 - Supports `amd64` and `aarch64`.
@@ -16,7 +16,6 @@ Documentation: https://manyfold.app/get-started/
 ## Default paths
 
 - Library path: `/share/manyfold/models`
-- Import path: `/share/manyfold/import`
 - Thumbnails path: `/config/thumbnails`
 
 ## Installation
@@ -26,9 +25,9 @@ Documentation: https://manyfold.app/get-started/
 3. Refresh Add-on Store and install **Manyfold**.
 4. Configure options (defaults are safe for first run):
    - `library_path`: `/share/manyfold/models`
-   - `import_path`: `/share/manyfold/import`
    - `secret_key_base`: leave blank to auto-generate
    - `puid` / `pgid`: set to a non-root UID/GID (see "Fix root warning (PUID/PGID)" below)
+   - optionally tune worker/thread and upload limits in "Small server tuning" below
 5. Start the add-on.
 6. Open `http://<HA_IP>:3214`.
 
@@ -42,8 +41,7 @@ Local development alternative on the HA host:
 
 1. Drop STL/3MF/etc into `/share/manyfold/models` on the host.
 2. In Manyfold UI, configure a library that points to the same container path.
-3. Optionally use `/share/manyfold/import` as a staging area, then move curated files to the library path.
-4. Thumbnails and indexing artifacts persist in `/config/thumbnails`.
+3. Thumbnails and indexing artifacts persist in `/config/thumbnails`.
 
 ## Options
 
@@ -51,9 +49,29 @@ Local development alternative on the HA host:
 - `puid` / `pgid`: Ownership applied to mapped directories.
 - `multiuser`: Toggle Manyfold multiuser mode.
 - `library_path`: Scanned/indexed path.
-- `import_path`: Staging/drop path.
 - `thumbnails_path`: Persistent thumbnails/index artifacts (must be under `/config`).
 - `log_level`: `info`, `debug`, `warn`, `error`.
+- `web_concurrency`: Puma worker process count.
+- `rails_max_threads`: Max threads per Puma worker.
+- `default_worker_concurrency`: Sidekiq default queue concurrency.
+- `performance_worker_concurrency`: Sidekiq performance queue concurrency.
+- `max_file_upload_size`: Max uploaded archive size in bytes.
+- `max_file_extract_size`: Max extracted archive size in bytes.
+
+## Small server tuning
+
+For low-memory HAOS hosts, start with:
+
+```yaml
+web_concurrency: 1
+rails_max_threads: 5
+default_worker_concurrency: 2
+performance_worker_concurrency: 1
+max_file_upload_size: 268435456
+max_file_extract_size: 536870912
+```
+
+Then restart the add-on and increase gradually only if needed.
 
 ## Fix root warning (PUID/PGID)
 
@@ -85,7 +103,6 @@ If you do not have a specific username, use the owner of the Manyfold folders:
 
 ```bash
 stat -c '%u %g' /share/manyfold/models
-stat -c '%u %g' /share/manyfold/import
 ```
 
 Set `puid`/`pgid` to those numbers.
@@ -98,7 +115,7 @@ After changing values:
 
 ## Validation behavior
 
-- Startup fails if `library_path`, `import_path`, or `thumbnails_path` resolve outside mapped storage roots.
+- Startup fails if `library_path` or `thumbnails_path` resolve outside mapped storage roots.
 - `thumbnails_path` must resolve under `/config` to guarantee persistence.
 
 ## Notes

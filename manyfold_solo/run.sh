@@ -5,9 +5,14 @@ CONFIG_DIR="/config"
 OPTIONS_JSON="/data/options.json"
 SECRET_FILE="${CONFIG_DIR}/secret_key_base"
 DEFAULT_LIBRARY_PATH="/share/manyfold/models"
-DEFAULT_IMPORT_PATH="/share/manyfold/import"
 DEFAULT_THUMBNAILS_PATH="/config/thumbnails"
 DEFAULT_LOG_LEVEL="info"
+DEFAULT_WEB_CONCURRENCY="4"
+DEFAULT_RAILS_MAX_THREADS="16"
+DEFAULT_DEFAULT_WORKER_CONCURRENCY="4"
+DEFAULT_PERFORMANCE_WORKER_CONCURRENCY="1"
+DEFAULT_MAX_FILE_UPLOAD_SIZE="1073741824"
+DEFAULT_MAX_FILE_EXTRACT_SIZE="1073741824"
 
 log() {
   echo "[manyfold-addon] $*"
@@ -135,16 +140,26 @@ PUID="$(read_opt puid)"; PUID="${PUID:-1000}"
 PGID="$(read_opt pgid)"; PGID="${PGID:-1000}"
 MULTIUSER="$(read_opt multiuser)"; MULTIUSER="${MULTIUSER:-true}"
 LIBRARY_PATH_RAW="$(read_opt library_path)"; LIBRARY_PATH_RAW="${LIBRARY_PATH_RAW:-$DEFAULT_LIBRARY_PATH}"
-IMPORT_PATH_RAW="$(read_opt import_path)"; IMPORT_PATH_RAW="${IMPORT_PATH_RAW:-$DEFAULT_IMPORT_PATH}"
 THUMBNAILS_PATH_RAW="$(read_opt thumbnails_path)"; THUMBNAILS_PATH_RAW="${THUMBNAILS_PATH_RAW:-$DEFAULT_THUMBNAILS_PATH}"
 LOG_LEVEL="$(read_opt log_level)"; LOG_LEVEL="${LOG_LEVEL:-$DEFAULT_LOG_LEVEL}"
+WEB_CONCURRENCY="$(read_opt web_concurrency)"; WEB_CONCURRENCY="${WEB_CONCURRENCY:-$DEFAULT_WEB_CONCURRENCY}"
+RAILS_MAX_THREADS="$(read_opt rails_max_threads)"; RAILS_MAX_THREADS="${RAILS_MAX_THREADS:-$DEFAULT_RAILS_MAX_THREADS}"
+DEFAULT_WORKER_CONCURRENCY="$(read_opt default_worker_concurrency)"; DEFAULT_WORKER_CONCURRENCY="${DEFAULT_WORKER_CONCURRENCY:-$DEFAULT_DEFAULT_WORKER_CONCURRENCY}"
+PERFORMANCE_WORKER_CONCURRENCY="$(read_opt performance_worker_concurrency)"; PERFORMANCE_WORKER_CONCURRENCY="${PERFORMANCE_WORKER_CONCURRENCY:-$DEFAULT_PERFORMANCE_WORKER_CONCURRENCY}"
+MAX_FILE_UPLOAD_SIZE="$(read_opt max_file_upload_size)"; MAX_FILE_UPLOAD_SIZE="${MAX_FILE_UPLOAD_SIZE:-$DEFAULT_MAX_FILE_UPLOAD_SIZE}"
+MAX_FILE_EXTRACT_SIZE="$(read_opt max_file_extract_size)"; MAX_FILE_EXTRACT_SIZE="${MAX_FILE_EXTRACT_SIZE:-$DEFAULT_MAX_FILE_EXTRACT_SIZE}"
 SECRET_KEY_BASE="$(read_opt secret_key_base)"; SECRET_KEY_BASE="${SECRET_KEY_BASE:-}"
 
 [[ "$PUID" =~ ^[0-9]+$ ]] || die "puid must be a non-negative integer"
 [[ "$PGID" =~ ^[0-9]+$ ]] || die "pgid must be a non-negative integer"
+[[ "$WEB_CONCURRENCY" =~ ^[1-9][0-9]*$ ]] || die "web_concurrency must be a positive integer"
+[[ "$RAILS_MAX_THREADS" =~ ^[1-9][0-9]*$ ]] || die "rails_max_threads must be a positive integer"
+[[ "$DEFAULT_WORKER_CONCURRENCY" =~ ^[1-9][0-9]*$ ]] || die "default_worker_concurrency must be a positive integer"
+[[ "$PERFORMANCE_WORKER_CONCURRENCY" =~ ^[1-9][0-9]*$ ]] || die "performance_worker_concurrency must be a positive integer"
+[[ "$MAX_FILE_UPLOAD_SIZE" =~ ^[1-9][0-9]*$ ]] || die "max_file_upload_size must be a positive integer (bytes)"
+[[ "$MAX_FILE_EXTRACT_SIZE" =~ ^[1-9][0-9]*$ ]] || die "max_file_extract_size must be a positive integer (bytes)"
 
 LIBRARY_PATH="$(require_mapped_path "library_path" "$LIBRARY_PATH_RAW")"
-IMPORT_PATH="$(require_mapped_path "import_path" "$IMPORT_PATH_RAW")"
 THUMBNAILS_PATH="$(require_mapped_path "thumbnails_path" "$THUMBNAILS_PATH_RAW")"
 
 case "$THUMBNAILS_PATH" in
@@ -155,7 +170,6 @@ esac
 ensure_dir "$CONFIG_DIR"
 ensure_dir "$DEFAULT_THUMBNAILS_PATH"
 ensure_dir "$LIBRARY_PATH"
-ensure_dir "$IMPORT_PATH"
 ensure_dir "$THUMBNAILS_PATH"
 
 if [[ -z "$SECRET_KEY_BASE" ]]; then
@@ -180,22 +194,32 @@ export PGID
 export MULTIUSER
 export MANYFOLD_MULTIUSER="$MULTIUSER"
 export MANYFOLD_LIBRARY_PATH="$LIBRARY_PATH"
-export MANYFOLD_IMPORT_PATH="$IMPORT_PATH"
 export MANYFOLD_THUMBNAILS_PATH="$THUMBNAILS_PATH"
 export RAILS_LOG_LEVEL="$LOG_LEVEL"
+export MANYFOLD_LOG_LEVEL="$LOG_LEVEL"
+export WEB_CONCURRENCY
+export RAILS_MAX_THREADS
+export DEFAULT_WORKER_CONCURRENCY
+export PERFORMANCE_WORKER_CONCURRENCY
+export MAX_FILE_UPLOAD_SIZE
+export MAX_FILE_EXTRACT_SIZE
 export PORT="3214"
 
 chown_recursive "$PUID:$PGID" "$CONFIG_DIR"
 chown_recursive "$PUID:$PGID" "$DEFAULT_THUMBNAILS_PATH"
 chown_recursive "$PUID:$PGID" "$LIBRARY_PATH"
-chown_recursive "$PUID:$PGID" "$IMPORT_PATH"
 chown_recursive "$PUID:$PGID" "$THUMBNAILS_PATH"
 
 log "Configuration summary:"
 log "  library_path=${LIBRARY_PATH}"
-log "  import_path=${IMPORT_PATH}"
 log "  thumbnails_path=${THUMBNAILS_PATH}"
 log "  multiuser=${MULTIUSER}"
 log "  puid:pgid=${PUID}:${PGID}"
+log "  web_concurrency=${WEB_CONCURRENCY}"
+log "  rails_max_threads=${RAILS_MAX_THREADS}"
+log "  default_worker_concurrency=${DEFAULT_WORKER_CONCURRENCY}"
+log "  performance_worker_concurrency=${PERFORMANCE_WORKER_CONCURRENCY}"
+log "  max_file_upload_size=${MAX_FILE_UPLOAD_SIZE}"
+log "  max_file_extract_size=${MAX_FILE_EXTRACT_SIZE}"
 
 start_manyfold

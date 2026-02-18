@@ -14,12 +14,27 @@ configuration:
   library_path:
     name: Library path
     description: Folder scanned/indexed by Manyfold. Must be under /share, /media, or /config.
-  import_path:
-    name: Import path
-    description: Drop folder for new files before moving into the library.
   thumbnails_path:
     name: Thumbnails path
     description: Path for thumbnails/index artifacts. Must resolve under /config.
   log_level:
     name: Log level
     description: Rails log verbosity.
+  web_concurrency:
+    name: Web workers
+    description: Puma worker process count (WEB_CONCURRENCY). Lower this on small servers.
+  rails_max_threads:
+    name: Web max threads
+    description: Max threads per Puma worker (RAILS_MAX_THREADS). Lower values reduce memory use.
+  default_worker_concurrency:
+    name: Default worker concurrency
+    description: Sidekiq concurrency for the default worker queue.
+  performance_worker_concurrency:
+    name: Performance worker concurrency
+    description: Sidekiq concurrency for the performance queue.
+  max_file_upload_size:
+    name: Max upload size (bytes)
+    description: Upper limit for uploaded archive size (MAX_FILE_UPLOAD_SIZE).
+  max_file_extract_size:
+    name: Max extract size (bytes)
+    description: Upper limit for extracted archive size (MAX_FILE_EXTRACT_SIZE).
