@@ -22,8 +22,8 @@ ingress: false
 
 map:
   - addon_config:rw
-  - share:ro
-  - media:ro
+  - share:rw
+  - media:rw
 
 options:
   secret_key_base: ""

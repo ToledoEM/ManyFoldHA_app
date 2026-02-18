@@ -8,7 +8,7 @@ Documentation: https://manyfold.app/get-started/
 
 - Runs Manyfold on port `3214`.
 - Persists app data, database, cache, and settings under `/config` (`addon_config`).
-- Uses a configurable library path on Home Assistant host storage with read-only host media mounts.
+- Uses a configurable library path on Home Assistant host storage.
 - Refuses startup if configured paths resolve outside `/share`, `/media`, or `/config`.
 - No external PostgreSQL or Redis required.
 - Supports `amd64` and `aarch64`.
