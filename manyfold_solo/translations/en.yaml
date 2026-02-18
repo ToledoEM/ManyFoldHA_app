@@ -4,10 +4,10 @@ configuration:
     description: Leave blank to auto-generate and persist at /config/secret_key_base.
   puid:
     name: PUID
-    description: User ID for file ownership on mapped volumes.
+    description: User ID for file ownership on writable mapped volumes.
   pgid:
     name: PGID
-    description: Group ID for file ownership on mapped volumes.
+    description: Group ID for file ownership on writable mapped volumes.
   multiuser:
     name: Multiuser mode
     description: Enable or disable Manyfold multiuser login.

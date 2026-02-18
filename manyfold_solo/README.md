@@ -8,10 +8,11 @@ Documentation: https://manyfold.app/get-started/
 
 - Runs Manyfold on port `3214`.
 - Persists app data, database, cache, and settings under `/config` (`addon_config`).
-- Uses a configurable library path on Home Assistant host storage.
+- Uses a configurable library path on Home Assistant host storage with read-only host media mounts.
 - Refuses startup if configured paths resolve outside `/share`, `/media`, or `/config`.
 - No external PostgreSQL or Redis required.
 - Supports `amd64` and `aarch64`.
+- Includes a baseline AppArmor profile.
 
 ## Default paths
 
@@ -31,6 +32,12 @@ Documentation: https://manyfold.app/get-started/
 5. Start the add-on.
 6. Open `http://<HA_IP>:3214`.
 
+Before first start, ensure your library folder exists on the host:
+
+```bash
+mkdir -p /share/manyfold/models
+```
+
 Local development alternative on the HA host:
 
 1. Copy `manyfold_solo/` to `/addons/manyfold_solo`.
@@ -46,7 +53,7 @@ Local development alternative on the HA host:
 ## Options
 
 - `secret_key_base`: App secret. Auto-generated and persisted at `/config/secret_key_base` when empty.
-- `puid` / `pgid`: Ownership applied to mapped directories.
+- `puid` / `pgid`: Ownership applied to writable mapped directories (`/config` paths).
 - `multiuser`: Toggle Manyfold multiuser mode.
 - `library_path`: Scanned/indexed path.
 - `thumbnails_path`: Persistent thumbnails/index artifacts (must be under `/config`).
@@ -117,6 +124,7 @@ After changing values:
 
 - Startup fails if `library_path` or `thumbnails_path` resolve outside mapped storage roots.
 - `thumbnails_path` must resolve under `/config` to guarantee persistence.
+- Startup fails if `library_path` is not readable.
 
 ## Notes
 

@@ -71,10 +71,36 @@ ensure_dir() {
   mkdir -p "$dir"
 }
 
-chown_recursive() {
+ensure_existing_or_create() {
+  local label="$1"
+  local dir="$2"
+
+  if [[ -d "$dir" ]]; then
+    return
+  fi
+
+  if mkdir -p "$dir" 2>/dev/null; then
+    return
+  fi
+
+  die "${label} '${dir}' does not exist and could not be created. Create it on the host or choose a writable path under /config."
+}
+
+chown_recursive_if_writable() {
   local owner="$1"
   local path="$2"
-  chown -R "$owner" "$path"
+
+  if [[ ! -e "$path" ]]; then
+    log "Skipping ownership update for ${path} (missing path)"
+    return
+  fi
+
+  if [[ -w "$path" ]]; then
+    chown -R "$owner" "$path"
+    return
+  fi
+
+  log "Skipping ownership update for ${path} (read-only mapping)"
 }
 
 generate_secret() {
@@ -169,8 +195,9 @@ esac
 
 ensure_dir "$CONFIG_DIR"
 ensure_dir "$DEFAULT_THUMBNAILS_PATH"
-ensure_dir "$LIBRARY_PATH"
+ensure_existing_or_create "library_path" "$LIBRARY_PATH"
 ensure_dir "$THUMBNAILS_PATH"
+[[ -r "$LIBRARY_PATH" ]] || die "library_path '${LIBRARY_PATH}' is not readable"
 
 if [[ -z "$SECRET_KEY_BASE" ]]; then
   if [[ -s "$SECRET_FILE" ]]; then
@@ -205,10 +232,10 @@ export MAX_FILE_UPLOAD_SIZE
 export MAX_FILE_EXTRACT_SIZE
 export PORT="3214"
 
-chown_recursive "$PUID:$PGID" "$CONFIG_DIR"
-chown_recursive "$PUID:$PGID" "$DEFAULT_THUMBNAILS_PATH"
-chown_recursive "$PUID:$PGID" "$LIBRARY_PATH"
-chown_recursive "$PUID:$PGID" "$THUMBNAILS_PATH"
+chown_recursive_if_writable "$PUID:$PGID" "$CONFIG_DIR"
+chown_recursive_if_writable "$PUID:$PGID" "$DEFAULT_THUMBNAILS_PATH"
+chown_recursive_if_writable "$PUID:$PGID" "$LIBRARY_PATH"
+chown_recursive_if_writable "$PUID:$PGID" "$THUMBNAILS_PATH"
 
 log "Configuration summary:"
 log "  library_path=${LIBRARY_PATH}"
