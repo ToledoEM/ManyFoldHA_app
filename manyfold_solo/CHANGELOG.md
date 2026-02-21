@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4
+
+- Pointed add-on metadata URL to the canonical Manyfold add-on path in `ToledoEM/hassio-addons`.
+- Switched add-on image repository to `ghcr.io/alexbelgium/manyfold-{arch}`.
+
 ## 1.0.3
 
 - Pinned upstream `manyfold-solo` base images to immutable digests in `build.yaml` and `Dockerfile`.

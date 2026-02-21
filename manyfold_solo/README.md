@@ -22,7 +22,7 @@ Documentation: [manyfold.app/get-started](https://manyfold.app/get-started/)
 ## Installation
 
 1. In Home Assistant OS Add-on Store, open menu (`...`) -> `Repositories`.
-2. Add this repository URL: `https://github.com/ToledoEM/ManyFoldHA_app` (the repo includes `repository.yaml` and `manyfold_solo/`).
+2. Add this repository URL: `https://github.com/ToledoEM/hassio-addons`.
 3. Refresh Add-on Store and install **Manyfold**.
 4. Configure options (defaults are safe for first run):
    - `library_path`: `/share/manyfold/models`
