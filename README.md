@@ -4,13 +4,13 @@
 
 This repository provides a Home Assistant OS add-on for Manyfold with persistent storage and configurable host-backed media paths.
 
-Documentation: https://manyfold.app/get-started/
+Documentation: [manyfold.app/get-started](https://manyfold.app/get-started/)
 
 ## Features
 
 - Runs Manyfold on port `3214`.
 - Persists app data, database, cache, and settings under `/config` (`addon_config`).
-- Uses configurable library and import paths on Home Assistant host storage.
+- Uses configurable library and thumbnails paths on Home Assistant host storage.
 - Refuses startup if configured paths resolve outside `/share`, `/media`, or `/config`.
 - No external PostgreSQL or Redis required.
 - Supports `amd64` and `aarch64`.
@@ -23,7 +23,6 @@ Documentation: https://manyfold.app/get-started/
 ## Default paths
 
 - Library path: `/share/manyfold/models`
-- Import path: `/share/manyfold/import`
 - Thumbnails path: `/config/thumbnails`
 
 ## Installation
@@ -33,7 +32,6 @@ Documentation: https://manyfold.app/get-started/
 3. Refresh Add-on Store and install **Manyfold**.
 4. Configure options (defaults are safe for first run):
    - `library_path`: `/share/manyfold/models`
-   - `import_path`: `/share/manyfold/import`
    - `secret_key_base`: leave blank to auto-generate
 5. Start the add-on.
 6. Open `http://<HA_IP>:3214`.
@@ -48,8 +46,7 @@ Local development alternative on the HA host:
 
 1. Drop STL/3MF/etc into `/share/manyfold/models` on the host.
 2. In Manyfold UI, configure a library that points to the same container path.
-3. Optionally use `/share/manyfold/import` as a staging area, then move curated files to the library path.
-4. Thumbnails and indexing artifacts persist in `/config/thumbnails`.
+3. Thumbnails and indexing artifacts persist in `/config/thumbnails`.
 
 ## Options
 
@@ -57,13 +54,12 @@ Local development alternative on the HA host:
 - `puid` / `pgid`: Ownership applied to mapped directories.
 - `multiuser`: Toggle Manyfold multiuser mode.
 - `library_path`: Scanned/indexed path.
-- `import_path`: Staging/drop path.
 - `thumbnails_path`: Persistent thumbnails/index artifacts (must be under `/config`).
 - `log_level`: `info`, `debug`, `warn`, `error`.
 
 ## Validation behavior
 
-- Startup fails if `library_path`, `import_path`, or `thumbnails_path` resolve outside mapped storage roots.
+- Startup fails if `library_path` or `thumbnails_path` resolve outside mapped storage roots.
 - `thumbnails_path` must resolve under `/config` to guarantee persistence.
 
 ## Notes

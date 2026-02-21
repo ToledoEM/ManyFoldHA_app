@@ -2,7 +2,7 @@
 
 This add-on wraps `ghcr.io/manyfold3d/manyfold-solo` for Home Assistant OS with persistent storage and configurable host-backed media paths.
 
-Documentation: https://manyfold.app/get-started/
+Documentation: [manyfold.app/get-started](https://manyfold.app/get-started/)
 
 ## Features
 

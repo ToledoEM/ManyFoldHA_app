@@ -1,6 +1,7 @@
-ARG MANYFOLD_IMAGE=ghcr.io/manyfold3d/manyfold-solo:latest
-FROM ${MANYFOLD_IMAGE}
+ARG BUILD_FROM=ghcr.io/manyfold3d/manyfold-solo:latest
+FROM ${BUILD_FROM}
 
+# hadolint ignore=DL3041
 RUN set -eux; \
     if command -v apk >/dev/null 2>&1; then \
       apk add --no-cache bash coreutils jq openssl; \

@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 set -Eeuo pipefail
 
 CONFIG_DIR="/config"
