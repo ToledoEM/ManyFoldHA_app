@@ -90,6 +90,7 @@ ensure_existing_or_create() {
 chown_recursive_if_writable() {
   local owner="$1"
   local path="$2"
+  local current_owner
 
   if [[ ! -e "$path" ]]; then
     log "Skipping ownership update for ${path} (missing path)"
@@ -97,6 +98,12 @@ chown_recursive_if_writable() {
   fi
 
   if [[ -w "$path" ]]; then
+    if current_owner="$(stat -c '%u:%g' "$path" 2>/dev/null)"; then
+      if [[ "$current_owner" == "$owner" ]]; then
+        log "Skipping ownership update for ${path} (already owned by ${owner})"
+        return
+      fi
+    fi
     chown -R "$owner" "$path"
     return
   fi
@@ -110,7 +117,7 @@ generate_secret() {
     return
   fi
 
-  head -c 64 /dev/urandom | od -An -tx1 | tr -d ' \n'
+  head -c 64 /dev/urandom | hexdump -ve '1/1 "%.2x"'
 }
 
 start_manyfold() {
@@ -154,7 +161,7 @@ start_manyfold() {
   fi
 
   if command -v bundle >/dev/null 2>&1; then
-    log "Starting Manyfold via rails server fallback"
+    log "Starting Manyfold via rails server fallback (debug mode: background workers are not started)"
     exec bundle exec rails server -b 0.0.0.0 -p 3214
   fi
 

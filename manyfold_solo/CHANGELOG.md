@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+- Pinned upstream `manyfold-solo` base images to immutable digests in `build.yaml` and `Dockerfile`.
+- Restricted AppArmor capabilities to the minimal set used by startup/runtime operations.
+- Optimized ownership updates in `run.sh` to skip recursive `chown` when ownership already matches.
+- Switched secret-generation fallback to `hexdump`.
+- Clarified Rails fallback log behavior (background workers are not started in that fallback mode).
+- Clarified README installation details (explicit repository URL and host context for path creation).
+
 ## 1.0.2
 
 - Added build metadata for Home Assistant CI compatibility:
