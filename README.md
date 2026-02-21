@@ -6,6 +6,10 @@ This repository provides a Home Assistant OS add-on for Manyfold with persistent
 
 Documentation: [manyfold.app/get-started](https://manyfold.app/get-started/)
 
+**Now in the Custom alexbelgium/hassio-addons Add-on Store! 💪**   
+ Search for "Manyfold" and install directly from there and instructions how to add it to your Home Assistant instance. [link](https://github.com/alexbelgium/hassio-addons)
+
+
 ## Features
 
 - Runs Manyfold on port `3214`.
