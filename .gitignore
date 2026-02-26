@@ -53,3 +53,7 @@ temp/
 # Local Docker overrides
 docker-compose.override.yml
 
+# Quarto project page files
+ManyFoldHA_app.qmd
+ManyFoldHA_app.html
+ManyFoldHA_app_files/
