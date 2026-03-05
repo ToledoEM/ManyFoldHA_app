@@ -54,7 +54,7 @@ Local development alternative on the HA host:
 
 ## Options
 
-- `secret_key_base`: App secret. Auto-generated and persisted at `/config/secret_key_base` when empty.
+- `secret_key_base`: App secret used by Rails to sign/encrypt sessions and tokens. See [Secret Key Base](#secret-key-base) below.
 - `puid` / `pgid`: Ownership applied to mapped directories.
 - `multiuser`: Toggle Manyfold multiuser mode.
 - `library_path`: Scanned/indexed path.
@@ -70,6 +70,23 @@ Local development alternative on the HA host:
 
 - This baseline avoids Home Assistant ingress and keeps direct port access.
 - If `puid`/`pgid` change, restart the add-on to re-apply ownership to mapped directories.
+
+## Secret Key Base
+
+`secret_key_base` is a required Rails secret used to sign and encrypt user sessions and tokens. Changing it will invalidate all active sessions and log everyone out.
+
+**How it works:**
+
+| Scenario | Behaviour |
+|----------|-----------|
+| **New install**, option left blank | A random secret is auto-generated and saved to `/config/secret_key_base` |
+| **Addon update**, option still blank | The previously saved `/config/secret_key_base` is reused — no data loss |
+| **Option manually set** | The value from the addon options is used directly |
+| **Option was set, then cleared on update** | A new secret is generated — **sessions will be invalidated** |
+
+**Recommendation:** Leave `secret_key_base` blank on first install and never change it afterwards. The auto-generated value persists across updates in `/config/secret_key_base`, which is part of the addon config storage and is included in Home Assistant backups.
+
+If you ever need to migrate to a new HA instance, copy `/config/secret_key_base` alongside your database to avoid losing sessions.
 
 ## Versioning
 
