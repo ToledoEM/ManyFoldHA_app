@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/manyfold3d/manyfold-solo:sha-70b395d85a73cca48ef859a3a01f303488c6ff7e
+ARG BUILD_FROM=ghcr.io/manyfold3d/manyfold-solo:0.133.1
 FROM ${BUILD_FROM}
 
 # hadolint ignore=DL3008,DL3018
