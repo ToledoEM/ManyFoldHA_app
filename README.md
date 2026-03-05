@@ -70,3 +70,11 @@ Local development alternative on the HA host:
 
 - This baseline avoids Home Assistant ingress and keeps direct port access.
 - If `puid`/`pgid` change, restart the add-on to re-apply ownership to mapped directories.
+
+## Versioning
+
+The add-on version in `config.yaml` (`version`) must match an existing tag of the upstream Docker image
+[`ghcr.io/manyfold3d/manyfold-solo`](https://github.com/manyfold3d/manyfold/pkgs/container/manyfold-solo),
+since Home Assistant uses it directly as the image tag when pulling.
+This means the add-on version number reflects the **Manyfold app version**, not an independent add-on release version.
+When a new Manyfold release is published upstream, update `version` in `config.yaml` to match the new tag (e.g. `0.99.1` → `1.0.0`).
