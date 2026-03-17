@@ -120,6 +120,20 @@ After changing values:
 2. Restart the Manyfold add-on.
 3. Check logs for `puid:pgid=<uid>:<gid>` and confirm the warning is gone.
 
+## Update procedure
+
+This add-on uses a local build (via `Dockerfile` + `build.yaml`) rather than a pre-built registry image, so updating requires a **Rebuild** — not just a standard update.
+
+When a new version is released:
+
+1. In HA, go to **Settings → Add-ons → Add-on Store**.
+2. Click the **⋮ menu** (top right) → **Check for updates** (or **Reload**).
+3. Open the **Manyfold** add-on page.
+4. Click **Rebuild** (not Update).
+
+**Why Rebuild?**
+A normal *Update* swaps in a pre-built image from a registry. This add-on instead builds locally from `Dockerfile`, which uses `FROM ${BUILD_FROM}` to pull the upstream `manyfold-solo` image specified in `build.yaml`. *Rebuild* re-runs that Dockerfile against the new base image, installs the required packages, and replaces the running container with the result.
+
 ## Validation behavior
 
 - Startup fails if `library_path` or `thumbnails_path` resolve outside mapped storage roots.
