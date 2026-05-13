@@ -1,4 +1,9 @@
 # Changelog
+## 0.140.0
+
+- Bumped to lasted version of Manyfold for both `amd64` and `aarch64`.
+- Details https://github.com/manyfold3d/manyfold/releases/tag/v0.140.0
+
 ## 0.139.2
 
 - Bumped upstream Manyfold image to `ghcr.io/manyfold3d/manyfold-solo:latest` for both `amd64` and `aarch64`.
