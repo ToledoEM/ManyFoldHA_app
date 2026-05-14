@@ -1,8 +1,10 @@
 # Changelog
 ## 0.140.0
 
-- Bumped to lasted version of Manyfold for both `amd64` and `aarch64`.
+- Bumped to lasted version of Manyfold for both `amd64` and `aarch64`
 - Details https://github.com/manyfold3d/manyfold/releases/tag/v0.140.0
+- Fixed Bundler `/root is not writable` warning by exporting `HOME=/config` before startup.
+- Added Raspberry Pi single-user configuration example to README.
 
 ## 0.139.2
 
