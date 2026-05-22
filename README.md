@@ -1,5 +1,7 @@
 # Manyfold Home Assistant Add-on
 
+> **⚠️ DEPRECATED** — This repository is archived. Active development has moved to [ToledoEM/hassio-addons-repository](https://github.com/ToledoEM/hassio-addons-repository).
+
 ![Manyfold Home Assistant Add-on logo](manyfold_solo/logo.png)
 
 This repository provides a Home Assistant OS add-on for Manyfold with persistent storage and configurable host-backed media paths.
